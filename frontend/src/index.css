@@ -1,13 +1,126 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css');
+
+main{
+  background: rgb(247, 247, 247);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Loader from https://loading.io/css/ */
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
 }
+.lds-ellipsis div {
+  position: absolute;
+  top: 27px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #6c757d;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 6px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 6px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 26px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 45px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(19px, 0);
+  }
+}
+
+.nav.nav-tabs .nav-item{
+  cursor: pointer;
+}
+a.table-row,
+.table-header{
+  background: #ffffff;
+  text-decoration: none;
+  border-bottom: 1px solid rgb(240, 240, 240);
+  color: rgb(51, 51, 51);
+}
+a:hover.table-row{
+  background: rgb(253, 247, 236);
+}
+
+.trade-history .card-header,
+.order-book .card-header{
+  background: #ffffff;
+}
+.trade-history .list-group,
+.order-book .list-group{
+  height: calc(100vh - 230px);
+  overflow: scroll;
+}
+.order-book .progress{
+  background: none;
+}
+
+.chart-container {   
+  width:100%;
+  height: 100%;
+}
+
+.cwrapper {background:#FFF; padding:35px 0; border-bottom:1px solid #ebedef;}
+	.cwrapper.alt {background:#F9FBFC;}
+.content {width:100%; margin:0 auto;}
+.flist p {display:inline-block; width:100%;}
+.flist input {}
+
+.cbox {background:#DBECED; padding:15px; position:relative;}
+  .cbox.fleft {float:left; width:100%;}
+  .cbox.fright {float:right; width:100%;}
+.cbox h3 {font-weight:normal; background:#EF4F50; color:#FFF; padding:7px 21px; border-radius:0 0 5px 5px; display:inline-block; position:relative; top:-15px; top:-15px;}
+.cbox h3, .cbox p {margin:0;}
+.cbox .rwrap {background:#DDD; width:40%; position:absolute; height:100%; top:0; right:0;}
+.cbox .rwrap div {padding:10px;}
+  .cbox .rwrap .flist p {display:block; font-size:14px; width:auto;}
+
+.cbox ul.list {list-style:none; margin:15px 0; padding:0; border-top:1px solid #CCC; margin-left:-15px; margin-right:-15px;}
+.cbox .list li {border-bottom:1px solid #CCC; padding:5px 15px; font-size:14px; background:#E1E1E1;}
+div.ultable {margin-top:10px;}
+ul.lister {list-style:none; text-align:left; border-bottom:1px solid #CCC; padding:5px 15px; font-size:14px; background:#E1E1E1; margin:0 -15px;}
+ul.lheader {background:none;}
+ul.lister li {display:inline-block; width:13%;}
+ul.lister a {text-decoration:none;}
+   ul.lister a:hover {text-decoration:underline;}
+
+.fwrapper {background-color:#3a3f42;}
+.footer {width:100%; margin:0 auto;}
+
+ul.fnav {list-style:none; margin:0; padding:10px 0;}
+.fnav li {display:inline-block; margin-right:25px;}
+ .fnav li a {color:#FFF; text-decoration:none; font-size:16px;}
+   .fnav li a:hover {color:#DDD;}
