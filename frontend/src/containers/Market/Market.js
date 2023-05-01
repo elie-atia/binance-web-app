@@ -6,7 +6,7 @@ import { update_market_pairs, set_active_market } from '../../state/MarketSlice/
 import { Nav, NavItem, NavLink, MarketsLink } from '../../styles/styledComponents';
 
 function Market() {
-
+   
     const dispatch = useDispatch();
 
     const market_pairs = useSelector((state) => state.market.market_pairs);
@@ -15,22 +15,6 @@ function Market() {
     const [isLoaded, setIsLoaded] = useState(market_pairs && active_market && active_market.filtered_pairs);
     let connectionObj = {};
 
-    const getTickerBySymbol = (data) => {
-        let ticker = {};
-        data?.forEach(item => {
-            let symbol = item.symbol || item.s;
-            ticker[symbol] = {
-                symbol: symbol,
-                lastPrice: item.lastPrice || item.c,
-                priceChange: item.priceChange || item.p,
-                priceChangePercent: item.priceChangePercent || item.P,
-                highPrice: item.highPrice || item.h,
-                lowPrice: item.lowPrice || item.l,
-                quoteVolume: item.quoteVolume || item.q,
-            }
-        })
-        return ticker;
-    }
 
     const handleTabClick = (e) => {
         let market = e.currentTarget ? e.currentTarget.getAttribute('data-tab') : e;
@@ -48,21 +32,8 @@ function Market() {
         connectionObj[connection] = new WebSocket(`ws://localhost:3002`);
         connectionObj[connection].onmessage = async (evt) => {
             try {
-                let textData;
-
-                if (evt.data instanceof Blob) {
-                    textData = await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = reject;
-                        reader.readAsText(evt.data);
-                    });
-                } else {
-                    textData = evt.data;
-                }
-
-                const data = JSON.parse(textData);
-                let ticker = getTickerBySymbol(data.data);
+                const data = JSON.parse(evt.data);
+                let ticker = data;
                 dispatch(update_market_pairs(ticker));
                 setIsLoaded(true);
             } catch (error) {
