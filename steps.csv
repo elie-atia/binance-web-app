@@ -1,7 +1,7 @@
 "task", "time to do", "status"
 "create a boiler project structure", "~6min","✓"
 "show the cryptocurrencies in the Market page", "~20min","✓"
-"use styled component for the design", "~15min", ""
+"use styled component for the design", "~1h", ""
 "use the backend to retreive all the data", "~20min", ""
 "connect the app to a  mongo database", "~30min", ""
 "create login and signup pages", "~30min", ""

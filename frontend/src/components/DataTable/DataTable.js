@@ -1,40 +1,54 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
+import { TableRow, TextDanger, TextSuccess, InlineMobile, MobileRow, Col12, Col4, Bold, MutedSmall, Small, TableHeader } from '../../styles/styledComponents';
 
 const Row = (props) => (
     <React.Fragment>
         <div className="d-none d-sm-inline">
-            <Link className="row table-row small py-1" to={`trade/${props.new_symbol}`}>
-                <div className="col">{props.symbol}</div>
-                <div className="col">{new BigNumber(props.lastPrice).toFormat(null,1)}</div>
-                <div className={props.priceChangePercent < 0 ? 'col text-danger' : 'col text-success'}>{`${new BigNumber(props.priceChangePercent).toFormat(2,1)}%`}</div>
-                <div className="col">{new BigNumber(props.highPrice).toFormat(null,1)}</div>
-                <div className="col">{new BigNumber(props.lowPrice).toFormat(null,1)}</div>
-                <div className="col">{new BigNumber(props.quoteVolume).toFormat(null,1)}</div>
-            </Link>
+            <TableRow to={`trade/${props.new_symbol}`}>
+                <div>{props.symbol}</div>
+                <div>{new BigNumber(props.lastPrice).toFormat(null, 1)}</div>
+                {props.priceChangePercent < 0 ? (
+                    <TextDanger>{`${new BigNumber(props.priceChangePercent).toFormat(2, 1)}%`}</TextDanger>
+                ) : (
+                    <TextSuccess>{`${new BigNumber(props.priceChangePercent).toFormat(2, 1)}%`}</TextSuccess>
+                )}
+                <div>{new BigNumber(props.highPrice).toFormat(null, 1)}</div>
+                <div>{new BigNumber(props.lowPrice).toFormat(null, 1)}</div>
+                <div>{new BigNumber(props.quoteVolume).toFormat(null, 1)}</div>
+            </TableRow>
         </div>
-        <div className="d-inline d-sm-none">
-            <Link className="row table-row small py-1" to={`trade/${props.new_symbol}`}>
-                <div className="col-12">
-                    <span className="font-weight-bold">{props.symbol}</span> <span>{new BigNumber(props.lastPrice).toFormat(null,1)}</span> <span className={props.priceChangePercent < 0 ? 'text-danger' : 'text-success'}>{`${new BigNumber(props.priceChangePercent).toFormat(2,1)}%`}</span>
-                </div>
-                <div className="col-4">
-                    <div className="font-weight-light text-muted small">24h High</div> 
-                    <span className="small">{new BigNumber(props.highPrice).toFormat(null,1)}</span>
-                </div>
-                <div className="col-4">
-                    <div className="font-weight-light text-muted small">24h Low</div> 
-                    <span className="small">{new BigNumber(props.lowPrice).toFormat(null,1)}</span>
-                </div>
-                <div className="col-4">
-                    <div className="font-weight-light text-muted small">24h Volume</div> 
-                    <span className="small">{new BigNumber(props.quoteVolume).toFormat(null,1)}</span>
-                </div>
-            </Link> 
-        </div>
-    </React.Fragment>    
-)
+        <InlineMobile>
+            <MobileRow to={`trade/${props.new_symbol}`}>
+                <Col12>
+                    <Bold>{props.symbol}</Bold> <span>{new BigNumber(props.lastPrice).toFormat(null, 1)}</span>{' '}
+                    {props.priceChangePercent < 0 ? (
+                        <TextDanger>{`${new BigNumber(props.priceChangePercent).toFormat(2, 1)}%`}</TextDanger>
+                    ) : (
+                        <TextSuccess>{`${new BigNumber(props.priceChangePercent).toFormat(2, 1)}%`}</TextSuccess>
+                    )}
+                </Col12>
+                <Col4>
+                    <MutedSmall>24h High</MutedSmall>
+                    <Small>{new BigNumber(props.highPrice).toFormat(null, 1)}</Small>
+                </Col4>
+                <Col4>
+                    <MutedSmall>24h Low</MutedSmall>
+                    <Small>{new BigNumber(props.lowPrice).toFormat(null, 1)}</Small>
+                </Col4>
+                <Col4>
+                    <MutedSmall>24h Volume</MutedSmall>
+                    <Small>{new BigNumber(props.quoteVolume).toFormat(null, 1)}</Small>
+                </Col4>
+            </MobileRow>
+        </InlineMobile>
+    </React.Fragment>
+);
+
+
+
+
 
 const DataTable = (props) => {
     let rows = [];
@@ -42,28 +56,29 @@ const DataTable = (props) => {
     let numRows = tickerArray.length;
 
     for (var i = 0; i < numRows; i++) {
-        if( props.filter.includes(tickerArray[i].symbol) ){
-            const new_symbol = (tickerArray[i].symbol).replace(props.quoteAsset,'_' + props.quoteAsset);
+        if (props.filter.includes(tickerArray[i].symbol)) {
+            const new_symbol = (tickerArray[i].symbol).replace(props.quoteAsset, '_' + props.quoteAsset);
             rows.push(
                 <Row {...tickerArray[i]} key={tickerArray[i].symbol} new_symbol={new_symbol} />
-            )
+            );
         }
     }
     return (
         <React.Fragment>
             <div className="d-none d-sm-inline">
-                <div className="row table-header small font-weight-bold py-1">
-                    <div className="col">Pair</div>
-                    <div className="col">Last Price</div>
-                    <div className="col">24h Change</div>
-                    <div className="col">24h High</div>
-                    <div className="col">24h Low</div>
-                    <div className="col">24h Volume</div>
-                </div>
+                <TableHeader>
+                    <div>Pair</div>
+                    <div>Last Price</div>
+                    <div>24h Change</div>
+                    <div>24h High</div>
+                    <div>24h Low</div>
+                    <div>24h Volume</div>
+                </TableHeader>
             </div>
             {rows}
         </React.Fragment>
     );
-}
+};
+
 
 export default DataTable;
