@@ -10,7 +10,6 @@ const initialState = {
 export const tradeSlice = createSlice({
   name: 'trade',
   initialState,
-  // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     set_ticker: (state = {}, action) => {
       state.ticker = action.payload
@@ -25,6 +24,5 @@ export const tradeSlice = createSlice({
 });
 
 export const { set_ticker, set_depth, set_trades } = tradeSlice.actions;
-
 
 export default tradeSlice.reducer;
