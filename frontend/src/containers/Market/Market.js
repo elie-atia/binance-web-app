@@ -15,7 +15,7 @@ function Market() {
     let connectionObj = {};
 
     const getTickerBySymbol = (data) => {
-        let ticker = {};  
+        let ticker = {};
         data?.forEach(item => {
             let symbol = item.symbol || item.s;
             ticker[symbol] = {
@@ -43,12 +43,33 @@ function Market() {
     const connectSocketStreams = (streams) => {
         streams = streams.join('/');
         let connection = btoa(streams);
-        connectionObj[connection] = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${streams}`);
-        connectionObj[connection].onmessage = evt => {
-            let ticker = getTickerBySymbol(JSON.parse(evt.data).data);
-            dispatch(update_market_pairs(ticker));
-            setIsLoaded(true);
-        }
+        // connectionObj[connection] = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${streams}`);
+        connectionObj[connection] = new WebSocket(`ws://localhost:3002`);
+        connectionObj[connection].onmessage = async (evt) => {
+            try {
+              let textData;
+          
+              if (evt.data instanceof Blob) {
+                textData = await new Promise((resolve, reject) => {
+                  const reader = new FileReader();
+                  reader.onload = () => resolve(reader.result);
+                  reader.onerror = reject;
+                  reader.readAsText(evt.data);
+                });
+              } else {
+                textData = evt.data;
+              }
+          
+              const data = JSON.parse(textData);
+              let ticker = getTickerBySymbol(data.data);
+              dispatch(update_market_pairs(ticker));
+              setIsLoaded(true);
+            } catch (error) {
+              console.error("Erreur lors de la lecture des données :", error);
+            }
+          };
+          
+          
         if (connectionObj[connection]) {
             connectionObj[connection].onerror = evt => {
                 console.error(evt);
@@ -61,7 +82,7 @@ function Market() {
         let connection = btoa(streams);
         if (connectionObj[connection].readyState === WebSocket.OPEN) {
             ws.current && ws.current.close();
-        }  
+        }
     }
 
     useEffect(() => {
@@ -100,9 +121,9 @@ function Market() {
                 </li> */}
             </ul>
 
-             {(market_pairs && active_market.filtered_pairs) ?
-                    <DataTable ticker={market_pairs} filter={active_market.filtered_pairs} quoteAsset={active_market.market} />
-                    : <Loading />} 
+            {(market_pairs && active_market.filtered_pairs) ?
+                <DataTable ticker={market_pairs} filter={active_market.filtered_pairs} quoteAsset={active_market.market} />
+                : <Loading />}
 
         </React.Fragment>
     );
