@@ -2,13 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import Loading from '../../components/Loading/Loading';
 import DataTable from '../../components/DataTable/DataTable';
 import { useSelector, useDispatch } from 'react-redux';
-import { update_market_pairs, set_active_market } from '../../state/MarketSlice/marketSlice';
+import { update_market_pairs, set_active_market } from '../../state//marketSlice';
 import { Nav, NavItem, NavLink, MarketsLink } from '../../styles/styledComponents';
 
 function Market() {
    
     const dispatch = useDispatch();
-
     const market_pairs = useSelector((state) => state.market.market_pairs);
     const active_market = useSelector((state) => state.market.active_market);
     const ws = useRef(null);
@@ -28,7 +27,6 @@ function Market() {
     const connectSocketStreams = (streams) => {
         streams = streams.join('/');
         let connection = btoa(streams);
-        // connectionObj[connection] = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${streams}`);
         connectionObj[connection] = new WebSocket(`ws://localhost:3002`);
         connectionObj[connection].onmessage = async (evt) => {
             try {
@@ -73,61 +71,31 @@ function Market() {
     if (!isLoaded) {
         return <Loading />;
     }
+    
+    const renderMarketNavItems = (markets) => {
+        return markets.map(market => (
+            <NavItem key={market}>
+                <NavLink
+                    className={active_market.market === market ? 'active' : ''}
+                    onClick={() => handleTabClick(market)}
+                >
+                    {market}
+                    <MarketsLink> Markets</MarketsLink>
+                </NavLink>
+            </NavItem>
+        ));
+    };
+
     return (
         <React.Fragment>
-            <Nav>
-                <NavItem>
-                    <NavLink
-                        className={active_market.market === 'BNB' ? 'active' : ''}
-                        onClick={handleTabClick}
-                        data-tab="BNB"
-                    >
-                        BNB
-                        <MarketsLink> Markets</MarketsLink>
-                    </NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink
-                        className={active_market.market === 'BTC' ? 'active' : ''}
-                        onClick={handleTabClick}
-                        data-tab="BTC"
-                    >
-                        BTC
-                        <MarketsLink> Markets</MarketsLink>
-                    </NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink
-                        className={active_market.market === 'ETH' ? 'active' : ''}
-                        onClick={handleTabClick}
-                        data-tab="ETH"
-                    >
-                        ETH
-                        <MarketsLink> Markets</MarketsLink>
-                    </NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink
-                        className={active_market.market === 'USDT' ? 'active' : ''}
-                        onClick={handleTabClick}
-                        data-tab="USDT"
-                    >
-                        USDT
-                        <MarketsLink> Markets</MarketsLink>
-                    </NavLink>
-                </NavItem>
+             <Nav>
+                {renderMarketNavItems(['BNB', 'BTC', 'ETH', 'USDT'])}
             </Nav>
-            {/* <li className="nav-item">
-                    <a className={active_market.market === 'BUY-SELL' ? 'nav-link active' : 'nav-link'} onClick={handleTabClick} data-tab="BUY-SELL">Buy/Sell</a>
-                </li> */}
-
             {(market_pairs && active_market.filtered_pairs) ?
                 <DataTable ticker={market_pairs} filter={active_market.filtered_pairs} quoteAsset={active_market.market} />
                 : <Loading />}
-
         </React.Fragment>
     );
-
 }
 
 export default Market;

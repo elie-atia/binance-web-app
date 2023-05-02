@@ -1,6 +1,6 @@
 import { configureStore, applyMiddleware } from '@reduxjs/toolkit';
-import marketReducer from './MarketSlice/marketSlice';
-import tradeReducer from './TradeSlice/tradeSlice';
+import marketReducer from './marketSlice';
+import tradeReducer from './tradeSlice';
 import logger from 'redux-logger'
 
 const store = configureStore({
