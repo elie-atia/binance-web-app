@@ -3,7 +3,7 @@ import Loading from '../../components/Loading/Loading';
 import DataTable from '../../components/DataTable/DataTable';
 import { useSelector, useDispatch } from 'react-redux';
 import { update_market_pairs, set_active_market } from '../../state//marketSlice';
-import { Nav, NavItem, NavLink, MarketsLink } from '../../styles/styledComponents';
+import { Nav, NavItem, NavLink, MarketsLink } from './Market.styles';
 
 function Market() {
    

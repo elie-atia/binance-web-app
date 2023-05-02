@@ -1,7 +1,6 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
-import { TableRow, TextDanger, TextSuccess, InlineMobile, MobileRow, Col12, Col4, Bold, MutedSmall, Small, TableHeader } from '../../styles/styledComponents';
+import { TableRow, TextDanger, TextSuccess, InlineMobile, MobileRow, Col12, Col4, Bold, MutedSmall, Small, TableHeader } from './DataTable.styles';
 
 const Row = (props) => (
     <React.Fragment>

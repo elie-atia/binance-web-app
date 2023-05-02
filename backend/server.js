@@ -10,7 +10,7 @@ const wss = new WebSocket.Server({ server });
 const PORT = 3001;
 
 // URL de connexion à MongoDB
-const url = 'mongodb://localhost:27017/ma_base_de_donnees';
+const url = 'mongodb://localhost:27017/my_db';
 
 // Connexion à MongoDB avec Mongoose
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -21,40 +21,28 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     console.error('Erreur de connexion à MongoDB :', err);
   });
 
-  const personneSchema = new mongoose.Schema({
-    nom: String,
-    prenom: String,
-    age: Number
+  function checkDatabaseConnection(req, res, next) {
+    if (mongoose.connection.readyState !== 1) {
+      res.status(503).json({ error: "La base de données n'est pas connectée" });
+    } else {
+      next();
+    }
+  }
+
+  const userSchema = new mongoose.Schema({
+    username: String,
+    email: String,
+    password: String,
   });
 
-  // Création d'un modèle à partir du schéma
-const Personne = mongoose.model('Personne', personneSchema);
+// Création d'un modèle à partir du schéma
+const User = mongoose.model('User', userSchema);
 
-  // Documents à ajouter
-const documents = [
-  new Personne({ nom: 'Dupont', prenom: 'Jean', age: 28 }),
-  new Personne({ nom: 'Martin', prenom: 'Marie', age: 32 }),
-  new Personne({ nom: 'Durand', prenom: 'Pierre', age: 45 }),
-];
 
-// Fonction pour ajouter des documents et les afficher
-async function ajouterEtAfficherPersonnes() {
-  // Ajouter les documents à la collection 'personnes'
-  const result = await Personne.insertMany(documents);
-  console.log('Documents ajoutés :', result);
-
-  // Récupérer et afficher les documents
-  const personnes = await Personne.find();
-  console.log('Documents dans la collection personnes :', personnes);
-}
-
-// Appeler la fonction ajouterEtAfficherPersonnes
-ajouterEtAfficherPersonnes();
 
 const binanceWebSocket = new WebSocket('wss://stream.binance.com:9443/stream?streams=!ticker@arr');
 
 const getTickerBySymbol = (data) => {
-
   let ticker = {};
   if (data && typeof data === 'object') {
     const items = Object.values(data);
@@ -86,10 +74,16 @@ wss.on('connection', (clientSocket) => {
     clientSocket.send(JSON.stringify(processedData));
   });
 
+  binanceWebSocket.on('error', (err) => {
+    console.error('Erreur de connexion WebSocket:', err);
+  });
+
   clientSocket.on('close', () => {
     console.log('Client disconnected');
   });
 });
+
+
 
 server.listen(3002, () => {
   console.log('Server listening on port 3002');
@@ -103,25 +97,24 @@ app.get('/api/test', (req, res) => {
   res.send('Hello, world!');
 });
 
-app.get('/users', function (req, res) {
-  const db = client.db('mydb');
-  const collection = db.collection('users');
-  collection.find().toArray(function (err, users) {
-    if (err) throw err;
+app.get('/users', checkDatabaseConnection, async function (req, res) {
+  try {
+    const users = await User.find().exec();
     res.send(users);
-  });
+  } catch (err) {
+    res.status(500).json({ error: "Erreur lors de la récupération des utilisateurs" });
+  }
 });
 
-app.post('/users', function (req, res) {
-  const db = client.db('mydb');
-  const collection = db.collection('users');
-  const newUser = req.body;
-  collection.insertOne(newUser, function (err, result) {
-    if (err) throw err;
-    res.send(result.ops[0]);
-  });
+app.post('/users', checkDatabaseConnection, async function (req, res) {
+  const newUser = new User(req.body);
+  try {
+    const user = await newUser.save();
+    res.send(user);
+  } catch (err) {
+    res.status(500).json({ error: "Erreur lors de l'ajout de l'utilisateur" });
+  }
 });
-
 
 
 app.listen(PORT, () => {
