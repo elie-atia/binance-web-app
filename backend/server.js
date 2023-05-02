@@ -3,6 +3,7 @@ const cors = require('cors');
 const WebSocket = require('ws');
 const http = require('http');
 const mongoose = require('mongoose');
+const User = require('./User');
 
 const app = express();
 const server = http.createServer(app);
@@ -21,22 +22,16 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     console.error('Erreur de connexion à MongoDB :', err);
   });
 
-  function checkDatabaseConnection(req, res, next) {
-    if (mongoose.connection.readyState !== 1) {
-      res.status(503).json({ error: "La base de données n'est pas connectée" });
-    } else {
-      next();
-    }
+function checkDatabaseConnection(req, res, next) {
+  if (mongoose.connection.readyState !== 1) {
+    res.status(503).json({ error: "La base de données n'est pas connectée" });
+  } else {
+    next();
   }
+}
 
-  const userSchema = new mongoose.Schema({
-    username: String,
-    email: String,
-    password: String,
-  });
 
-// Création d'un modèle à partir du schéma
-const User = mongoose.model('User', userSchema);
+module.exports = User;
 
 
 
@@ -64,6 +59,11 @@ const getTickerBySymbol = (data) => {
   return ticker;
 };
 
+// Ajoutez le gestionnaire d'erreur ici
+binanceWebSocket.on('error', (err) => {
+  console.error('Erreur de connexion WebSocket Binance:', err);
+});
+
 wss.on('connection', (clientSocket) => {
   console.log('Client connected');
 
@@ -74,9 +74,6 @@ wss.on('connection', (clientSocket) => {
     clientSocket.send(JSON.stringify(processedData));
   });
 
-  binanceWebSocket.on('error', (err) => {
-    console.error('Erreur de connexion WebSocket:', err);
-  });
 
   clientSocket.on('close', () => {
     console.log('Client disconnected');
@@ -106,11 +103,39 @@ app.get('/users', checkDatabaseConnection, async function (req, res) {
   }
 });
 
-app.post('/users', checkDatabaseConnection, async function (req, res) {
-  const newUser = new User(req.body);
+app.post('/login', checkDatabaseConnection, async function (req, res) {
+  const { email, password } = req.body;
+  console.log(email)
   try {
-    const user = await newUser.save();
-    res.send(user);
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'Email ou mot de passe incorrect' });
+    }
+  
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: 'Email ou mot de passe incorrect' });
+    }
+  
+    res.status(200).json({
+      message: 'Connexion réussie',
+      // Vous pouvez ajouter d'autres informations sur l'utilisateur ici
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: "Erreur lors de la récupération des utilisateurs" });
+  }
+});
+
+app.post('/signup', checkDatabaseConnection, async function (req, res) {
+  const { name, email, password } = req.body;
+  try {
+    const newUser = new User({ name, email, password });
+    await newUser.save();
+    res.status(201).json({
+      message: 'Inscription réussie',
+      // Vous pouvez ajouter d'autres informations sur l'utilisateur ici
+    });
   } catch (err) {
     res.status(500).json({ error: "Erreur lors de l'ajout de l'utilisateur" });
   }
