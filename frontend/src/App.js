@@ -5,12 +5,14 @@ import Market from './containers/Market/Market';
 import HomePage from './containers/Home/HomePage';
 import Signup from './containers/Signup/Signup';
 import Login from './containers/Login/Login';
+import Header from './components/Header/Header';
 
 function App() {
 
   return (
     <Router>
       <React.Fragment>
+      <Header />
         <main role="main">
           <div className="container-fluid">
             <div className="row">

@@ -4,7 +4,7 @@
 "use styled component for the design", "~1h", "✓"
 "use the backend to retreive all the data", "~45min", "✓"
 "connect the app to a  mongo database", "~1h15", "✓"
-"create login and signup pages", "~30min", ""
+"create login and signup pages", "~1h30", "✓"
 "enable each user to buy and sell crypto and updates the profits", "~1h30",""
 "compare the results of each users", "~20min", ""
 "show a graph for each cryptocrurrency", "~20min", ""
