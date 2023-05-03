@@ -3,7 +3,7 @@
 "show the cryptocurrencies in the Market page", "~20min","✓"
 "use styled component for the design", "~1h", "✓"
 "use the backend to retreive all the data", "~45min", "✓"
-"connect the app to a  mongo database", "~1h15", "✓"
+"connect the app to a  mongo database", "~1h15", \"✓"
 "create login and signup pages", "~1h30", "✓"
 "enable each user to buy and sell crypto and updates the profits", "~1h30",""
 "compare the results of each users", "~20min", ""
