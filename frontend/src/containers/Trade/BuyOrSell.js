@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import axios from 'axios';
 import HmacSHA256 from 'crypto-js/hmac-sha256';
 import { useSelector } from 'react-redux';
+import { CWrapper, Content, CBox, FList, P, Input, Button } from './BuyOrSell.styles.js';
 
 // ** Define here env-like variables
 const isProd = false; // set it to false when wanting to connect to local server running on port 8080
@@ -50,82 +51,82 @@ const BuyOrSell = (props) => {
         }
     }
     useEffect(() => {
-        if(buySellAtmarketPrice){
+        if (buySellAtmarketPrice) {
             setBuyPrice(ticker.c);
             setSellPrice(ticker.c);
         }
-    }, [buySellAtmarketPrice,ticker]);
+    }, [buySellAtmarketPrice, ticker]);
 
     return (
-        <div className="cwrapper alt">
-            <div className="content">
+        <CWrapper className="alt">
+            <Content>
 
-                <div className="cbox  col-12 col-md-6">
-                    <div className="flist">
-                        <p>Api key:</p>
-                        <input type="text" placeholder="binance-api-key" onChange={e => handleSetKey(e.target.value)} value={key} />
-                    </div>
-                    <div className="flist">
-                        <p>Api secret:</p>
-                        <input type="text" placeholder="binance-api-secret" onChange={e => handleSetSecret(e.target.value)} value={secret} />
-                    </div>
-                </div>
+                <CBox className="col-12 col-md-6">
+                    <FList>
+                        <P>Api key:</P>
+                        <Input type="text" placeholder="binance-api-key" onChange={e => handleSetKey(e.target.value)} value={key} />
+                    </FList>
+                    <FList>
+                        <P>Api secret:</P>
+                        <Input type="text" placeholder="binance-api-secret" onChange={e => handleSetSecret(e.target.value)} value={secret} />
+                    </FList>
+                </CBox>
 
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="atmarketPrice"  value='atmarketPrice'/>
-                        <label class="form-check-label" for="atmarketPrice">Buy/Sell at market Price</label>
+                    <input class="form-check-input" type="checkbox" id="atmarketPrice" value='atmarketPrice' />
+                    <label class="form-check-label" for="atmarketPrice">Buy/Sell at market Price</label>
                 </div>
 
 
-                <div className="cbox fleft col-12 col-md-6">
+                <CBox className="fleft col-12 col-md-6">
                     <h3>Sell {props.symbol.split("_")[1]} for {props.symbol.split("_")[0]}</h3>
-                    <div className="flist">
-                        <p>Amount:</p>
-                        <input type="text" placeholder={props.symbol.split("_")[0]} onChange={e => setSellAmount(e.target.value)} value={sellAmount} />
-                    </div>
-                    <div className="flist">
-                        <p>Price:</p>
-                        <input disabled={buySellAtmarketPrice} type="text" placeholder={props.symbol.split("_")[1]} onChange={e => setSellPrice(e.target.value)} value={sellPrice} />
-                    </div>
+                    <FList>
+                        <P>Amount:</P>
+                        <Input type="text" placeholder={props.symbol.split("_")[0]} onChange={e => setSellAmount(e.target.value)} value={sellAmount} />
+                    </FList>
+                    <FList>
+                        <P>Price:</P>
+                        <Input disabled={buySellAtmarketPrice} type="text" placeholder={props.symbol.split("_")[1]} onChange={e => setSellPrice(e.target.value)} value={sellPrice} />
+                    </FList>
                     <div className="flist" style={{ backgroundColor: '#FFF' }}>
                         <p>Total:</p>
                         <span>{`${sellPrice * sellAmount} ${props.symbol.split("_")[1]}`}</span>
 
                     </div>
-                    <div className="flist">
-                        <p>&nbsp;</p>
-                        <button className="button blue" onClick={() => placeAnOrder(false)}>
+                    <FList>
+                        <P>&nbsp;</P>
+                        <Button className="blue" onClick={() => placeAnOrder(false)}>
                             {`Sell ${props.symbol.split("_")[0]}`}
-                        </button>
-                    </div>
+                        </Button>
+                    </FList>
 
 
-                </div>
-                <div className="cbox fright col-12 col-md-6">
+                </CBox>
+                <CBox className="fright col-12 col-md-6">
                     <h3>Buy {props.symbol.split("_")[0]} with {props.symbol.split("_")[1]}</h3>
-                    <div className="flist">
-                        <p>Amount:</p>
-                        <input type="text" placeholder={props.symbol.split("_")[0]} onChange={e => setBuyAmount(e.target.value)} value={buyAmount} />
-                    </div>
-                    <div className="flist">
-                        <p>Price:</p>
-                        <input disabled={buySellAtmarketPrice} type="text" placeholder={props.symbol.split("_")[1]} onChange={e => setBuyPrice(e.target.value)} value={buyPrice} />
-                    </div>
-                    <div className="flist" style={{ backgroundColor: '#FFF' }}>
-                        <p>Total:</p>
+                    <FList>
+                        <P>Amount:</P>
+                        <Input type="text" placeholder={props.symbol.split("_")[0]} onChange={e => setBuyAmount(e.target.value)} value={buyAmount} />
+                    </FList>
+                    <FList>
+                        <P>Price:</P>
+                        <Input disabled={buySellAtmarketPrice} type="text" placeholder={props.symbol.split("_")[1]} onChange={e => setBuyPrice(e.target.value)} value={buyPrice} />
+                    </FList>
+                    <FList style={{ backgroundColor: '#FFF' }}>
+                        <P>Total:</P>
                         <span>{`${buyPrice * buyAmount} ${props.symbol.split("_")[1]}`}</span>
-                    </div>
-                    <div className="flist">
-                        <p>&nbsp;</p>
-                        <button className="button blue" onClick={() => placeAnOrder(true)}>
+                    </FList>
+                    <FList>
+                        <P>&nbsp;</P>
+                        <Button className="blue" onClick={() => placeAnOrder(true)}>
                             {`Buy ${props.symbol.split("_")[0]}`}
-                        </button>
-                    </div>
+                        </Button>
+                    </FList>
 
-                </div>
-            </div>
+                </CBox>
+            </Content>
 
-        </div>
+        </CWrapper>
     );
 }
 

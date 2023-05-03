@@ -21,10 +21,10 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    process.env.NODE_ENV !== 'production'
-      ? getDefaultMiddleware().concat(logger)
-      : getDefaultMiddleware(),
+  // middleware: (getDefaultMiddleware) =>
+  //   process.env.NODE_ENV !== 'production'
+  //     ? getDefaultMiddleware().concat(logger)
+  //     : getDefaultMiddleware(),
 });
 
 const persistor = persistStore(store);
