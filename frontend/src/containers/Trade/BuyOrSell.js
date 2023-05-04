@@ -17,6 +17,7 @@ const BuyOrSell = (props) => {
     const [key, setKey] = useState(localStorage?.getItem('binanceKey') || "");
     const [secret, setSecret] = useState(localStorage?.getItem('binanceSecret') || "");
     const ticker = useSelector((state) => state.trade.ticker);
+    const authState = useSelector((state) => state.auth);
     var buySellAtmarketPrice = document.querySelector('input[value="atmarketPrice"]:checked');
 
     const handleSetKey = (value) => {
@@ -29,27 +30,33 @@ const BuyOrSell = (props) => {
         localStorage.setItem("binanceSecret", value);
     }
 
-    const placeAnOrder = (isBuy) => {
+    const placeAnOrder = async (isBuy) => {
         const newSymbol = props.symbol.replace('_', '');
-        const totalParams = `symbol=${newSymbol}&side=${isBuy ? 'BUY' : 'SELL'}&type=LIMIT&timeInForce=GTC&quantity=${isBuy ? buyAmount : sellAmount}&price=${isBuy ? buyPrice : sellPrice}&timestamp=${Date.now()}`;
-        const signature = HmacSHA256(totalParams, secret).toString();
+        const totalParams = `symbol=${newSymbol}&side=${isBuy ? 'BUY' : 'SELL'}&quantity=${isBuy ? buyAmount : sellAmount}&price=${isBuy ? buyPrice : sellPrice}&timestamp=${Date.now()}`;
         const json = {
-            signature: signature,
-            key: key,
+            token: authState?.token,
             totalParams: totalParams
         }
-        try {
-            const res = axios.post(`${serverBaseUrl}/takeOrder/order`, json)
-                .then((response) => {
-                    console.log(response);
-                }, (error) => {
-                    console.log(error);
-                });
-        } catch (err) {
-            // Handle Error Here
-            console.error(err);
-        }
+
+        const response = await fetch('http://localhost:3001/placeOrder', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(json),
+          });
+      
+          if (response.ok) {   
+            console.log('place order successfully')
+      
+          } else {
+            // Affichez une erreur si le statut de la réponse n'est pas OK
+            console.error(`Erreur lors de la connexion: ${response.status}`);
+          }
+
     }
+
+    
     useEffect(() => {
         if (buySellAtmarketPrice) {
             setBuyPrice(ticker.c);

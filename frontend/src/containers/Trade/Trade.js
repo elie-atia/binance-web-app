@@ -15,6 +15,8 @@ function Trade(props) {
     const ticker = useSelector((state) => state.trade.ticker);
     const depth = useSelector((state) => state.trade.depth);
     const trades = useSelector((state) => state.trade.trades);
+    const authState = useSelector((state) => state.auth);
+    const isLoggedIn = !!authState.token;
 
     const [loadedTrades, setLoadedTrades] = useState(false);
     const [loadedTicker, setLoadedTicker] = useState(false);
@@ -158,15 +160,22 @@ function Trade(props) {
                 <div className="col-12 col-md-6">{(pastData && pastData.labels && pastData.datasets && loadedChart) ?
                     <MyChart {...pastData} /> : <Loading />}
                 </div>
-
-                <div className="col-12 col-md-6"> <BuyOrSell symbol={(props.match.params.symbol)} /> </div>
             </div>
+            {isLoggedIn ?
+                <>
+                    <div className="row">
+                        <div className="col-12 col-md-6">
+                            <BuyOrSell symbol={(props.match.params.symbol)} />
+                        </div>
+                    </div>
 
-            <div className="row">
-                <OrderHistory symbol={(props.match.params.symbol)} />
-            </div>
+                    <div className="row">
+                        <OrderHistory symbol={(props.match.params.symbol)} />
+                    </div>
+                </>:
+                <h1>Login in order to buy and sell at market price</h1>
+            }
 
-        
 
             {/* <div className="row">
                 <div className="col-12 col-sm-6">{loadedTrades ? <TradeHistory trades={trades} /> : <Loading />}</div>

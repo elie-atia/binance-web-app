@@ -50,7 +50,6 @@ const init = (app) => {
         console.log('Client connected to streamWs');
         const url = new URL(req.url, `ws://${req.headers.host}`);
         const streams = url.searchParams.get("streams");
-        console.log(streams);
         const binanceStreamWebSocket = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${streams}`);
 
         binanceStreamWebSocket.on('message', (message) => {
