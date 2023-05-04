@@ -1,8 +1,8 @@
 import { WebSocketServer,WebSocket } from "ws";
 
-const binanceWebSocket = new WebSocket('wss://stream.binance.com:9443/stream?streams=!ticker@arr');
+const binanceAllTickerWebSocket = new WebSocket('wss://stream.binance.com:9443/stream?streams=!ticker@arr');
 
-binanceWebSocket.on('error', (err) => {
+binanceAllTickerWebSocket.on('error', (err) => {
     console.error('Erreur de connexion WebSocket Binance:', err);
 });
 
@@ -29,16 +29,33 @@ const getTickerBySymbol = (data) => {
 };
 
 
-const init = (server) => {
-    const wss = new WebSocketServer({ server:server });
-    wss.on('connection', (clientSocket) => {
-        console.log('Client connected');
+const init = (app) => {
+    app.ws('/allTickerWs', (clientSocket, req) => {
+        console.log('Client connected to allTickerWs');
 
-        binanceWebSocket.on('message', (message) => {
+        binanceAllTickerWebSocket.on('message', (message) => {
             const data = JSON.parse(message);
             const processedData = getTickerBySymbol(data);
             // console.log('Data sent:', processedData); // Ajouter cette ligne
             clientSocket.send(JSON.stringify(processedData));
+        });
+
+        clientSocket.on('close', () => {
+            console.log('Client disconnected');
+        });
+    });
+
+
+    app.ws('/streamWs', (clientSocket, req) => {
+        console.log('Client connected to streamWs');
+        const url = new URL(req.url, `ws://${req.headers.host}`);
+        const streams = url.searchParams.get("streams");
+        console.log(streams);
+        const binanceStreamWebSocket = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${streams}`);
+
+        binanceStreamWebSocket.on('message', (message) => {
+            const data = JSON.parse(message);
+            clientSocket.send(JSON.stringify(data));
         });
 
         clientSocket.on('close', () => {

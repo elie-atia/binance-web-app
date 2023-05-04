@@ -4,11 +4,13 @@ import http from 'http';
 import routes from './routes/index.route.js';
 import webSocket from './utils/websocket.js';
 import db from './utils/db.js';
-
+import expressWs from 'express-ws';
 
 
 const app = express();
 const server = http.createServer(app);
+expressWs(app, server);
+
 const PORT = 3001;
 
 db.connect();
@@ -17,12 +19,8 @@ app.use(cors());
 app.use(express.json());
 app.use('/', routes);
 
-webSocket.init(server);
+webSocket.init(app);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
-});
-
-server.listen(3002, () => {
-  console.log('Server listening on port 3002');
 });

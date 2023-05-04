@@ -36,7 +36,7 @@ function Trade(props) {
         streams = streams.join('/');
         let connection = btoa(streams);
         // connectionObj[connection] = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${streams}`);
-        connectionObj[connection] = new WebSocket(`ws://localhost:3003/stream?streams=${streams}`);
+        connectionObj[connection] = new WebSocket(`ws://localhost:3001/streamWs/?streams=${streams}`);
 
         connectionObj[connection].onmessage = evt => {
             let eventData = JSON.parse(evt.data);

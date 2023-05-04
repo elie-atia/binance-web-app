@@ -27,7 +27,7 @@ function Market() {
     const connectSocketStreams = (streams) => {
         streams = streams.join('/');
         let connection = btoa(streams);
-        connectionObj[connection] = new WebSocket(`ws://localhost:3002`);
+        connectionObj[connection] = new WebSocket(`ws://localhost:3001/allTickerWs`);
         connectionObj[connection].onmessage = async (evt) => {
             try {
                 const data = JSON.parse(evt.data);
