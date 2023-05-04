@@ -34,7 +34,6 @@ const BuyOrSell = (props) => {
         const newSymbol = props.symbol.replace('_', '');
         const totalParams = `symbol=${newSymbol}&side=${isBuy ? 'BUY' : 'SELL'}&quantity=${isBuy ? buyAmount : sellAmount}&price=${isBuy ? buyPrice : sellPrice}&timestamp=${Date.now()}`;
         const json = {
-            token: authState?.token,
             totalParams: totalParams
         }
 
@@ -42,6 +41,7 @@ const BuyOrSell = (props) => {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Authorization':  authState?.token, 
             },
             body: JSON.stringify(json),
           });
@@ -54,7 +54,7 @@ const BuyOrSell = (props) => {
             console.error(`Erreur lors de la connexion: ${response.status}`);
           }
 
-    }
+    };
 
     
     useEffect(() => {

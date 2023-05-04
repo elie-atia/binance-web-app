@@ -1,22 +1,23 @@
 import express from 'express';
 import checkDatabaseConnection from '../middlewares/checkDatabaseConnection.js';
+import verifyToken from '../middlewares/verifyToken.js';
+
 import Order from '../models/Order.js';
 
 const router = express.Router();
 
-router.post('/placeOrder', checkDatabaseConnection, async function (req, res) {
-    const { token, totalParams } = req.body;
+router.post('/placeOrder',verifyToken, checkDatabaseConnection, async function (req, res) {
+    const { totalParams } = req.body;
     try {
-        console.log(token, totalParams);
         const urlParams = new URLSearchParams(totalParams);
         const symbol = urlParams.get('symbol');
         const side = urlParams.get('side');
         const quantity = urlParams.get('quantity');
         const price = urlParams.get('price');
         const timestamp = urlParams.get('timestamp');
-        const userMail = "ee@gmail.com"
+        const userId = req.userId;
 
-        const newOrder = new Order({ timestamp, symbol, side, quantity, price, userMail });
+        const newOrder = new Order({ timestamp, symbol, side, quantity, price, userId });
 
         await newOrder.save();
         res.status(201).json({
@@ -28,6 +29,17 @@ router.post('/placeOrder', checkDatabaseConnection, async function (req, res) {
     }
 });
 
+
+router.post('/orderHistory',verifyToken, checkDatabaseConnection, async function (req, res) {
+    try {
+        const userIdValue = req.userId;
+        console.log(userIdValue);
+        const orders = await Order.find({ userId: userIdValue }).exec();
+        res.send(orders);
+    } catch (err) {
+        res.status(500).json({ error: "Erreur lors de la récupération des ordres" });
+    }
+});
 
 router.get('/orders', checkDatabaseConnection, async function (req, res) {
     try {
