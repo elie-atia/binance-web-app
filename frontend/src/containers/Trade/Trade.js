@@ -35,7 +35,8 @@ function Trade(props) {
     const connectSocketStreams = (streams) => {
         streams = streams.join('/');
         let connection = btoa(streams);
-        connectionObj[connection] = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${streams}`);
+        // connectionObj[connection] = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${streams}`);
+        connectionObj[connection] = new WebSocket(`ws://localhost:3003/stream?streams=${streams}`);
 
         connectionObj[connection].onmessage = evt => {
             let eventData = JSON.parse(evt.data);
@@ -160,18 +161,17 @@ function Trade(props) {
 
                 <div className="col-12 col-md-6"> <BuyOrSell symbol={(props.match.params.symbol)} /> </div>
             </div>
-         
-            <div className="row">
-                <OrderHistory symbol = {(props.match.params.symbol)} />
-            </div>
-
-              <div className="row dashboard">
-            </div>
 
             <div className="row">
+                <OrderHistory symbol={(props.match.params.symbol)} />
+            </div>
+
+        
+
+            {/* <div className="row">
                 <div className="col-12 col-sm-6">{loadedTrades ? <TradeHistory trades={trades} /> : <Loading />}</div>
                 <div className="col-12 col-sm-6">{loadedDepth ? <OrderBook bids={depth.bids} asks={depth.asks} /> : <Loading />}</div>
-            </div>
+            </div> */}
         </React.Fragment>
     );
 }

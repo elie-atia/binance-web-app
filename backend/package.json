@@ -1,6 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
@@ -14,6 +15,6 @@
     "ws": "^8.13.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node app.js"
   }
 }

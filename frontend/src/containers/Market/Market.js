@@ -54,7 +54,7 @@ function Market() {
             ws.current && ws.current.close();
         }
     }
-
+  
     useEffect(() => {
         handleTabClick(active_market?.market || 'USDT')
     }, [market_pairs]);

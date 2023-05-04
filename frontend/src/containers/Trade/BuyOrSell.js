@@ -61,17 +61,6 @@ const BuyOrSell = (props) => {
         <CWrapper className="alt">
             <Content>
 
-                <CBox className="col-12 col-md-6">
-                    <FList>
-                        <P>Api key:</P>
-                        <Input type="text" placeholder="binance-api-key" onChange={e => handleSetKey(e.target.value)} value={key} />
-                    </FList>
-                    <FList>
-                        <P>Api secret:</P>
-                        <Input type="text" placeholder="binance-api-secret" onChange={e => handleSetSecret(e.target.value)} value={secret} />
-                    </FList>
-                </CBox>
-
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="atmarketPrice" value='atmarketPrice' />
                     <label class="form-check-label" for="atmarketPrice">Buy/Sell at market Price</label>
