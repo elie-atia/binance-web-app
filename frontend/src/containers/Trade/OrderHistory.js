@@ -149,21 +149,21 @@ const getOrdersHistory = async () => {
               <Li>Pair</Li>
               <Li>Type</Li>
               <Li>Side</Li>
+              <Li>Price</Li>
               <Li>Total</Li>
-              <Li>Status</Li>
               <Li>Cancel</Li>
             </UlList>
-            {ordersHistory.filter(order => order.status === 'NEW')
+            {ordersHistory.filter(order => order.status === 'Filled')
               .map((order, index) =>
                 <UlList key={index}>
                   <Li>{order.time}</Li>
                   <Li>{order.symbol}</Li>
                   <Li>{order.type}</Li>
                   <Li>{order.side}</Li>
+                  <Li>{order.price}</Li>
                   <Li>{`${Number(order.price) * Number(order.quantity)} ${props.symbol.split("_")[1]}`}</Li>
-                  <Li>{order.status}</Li>
                   <Li>
-                    <Button onClick={() => handleCancelOrder(order.clientOrderId)}>Cancel</Button>
+                    <button onClick={() => handleCancelOrder(order.clientOrderId)}>Cancel</button>
                   </Li>
                 </UlList>)}
           </UlTable>
@@ -180,13 +180,10 @@ const getOrdersHistory = async () => {
             <UlList className="lheader">
               <Li>Date</Li>
               <Li>Pair</Li>
-
-
-
               <Li>Type</Li>
                 <Li>Side</Li>
-                <Li>Executed</Li>
-                <Li>Total</Li>
+                <Li>Price</Li>
+                <Li>Amount</Li>
                 <Li>Status</Li>
               </UlList>
               {ordersHistory.filter(order => order.status !== 'NEW')
@@ -196,8 +193,8 @@ const getOrdersHistory = async () => {
                     <Li>{order.symbol}</Li>
                     <Li>{order.type}</Li>
                     <Li>{order.side}</Li>
-                    <Li>{order.executedQty}</Li>
-                    <Li>{order.cummulativeQuoteQty}</Li>
+                    <Li>{order.price}</Li>
+                    <Li>{order.quantity}</Li>
                     <Li>{order.status}</Li>
                   </UlList>)}
             </UlTable>

@@ -32,7 +32,8 @@ const BuyOrSell = (props) => {
 
     const placeAnOrder = async (isBuy) => {
         const newSymbol = props.symbol.replace('_', '');
-        const totalParams = `symbol=${newSymbol}&side=${isBuy ? 'BUY' : 'SELL'}&quantity=${isBuy ? buyAmount : sellAmount}&price=${isBuy ? buyPrice : sellPrice}&timestamp=${Date.now()}`;
+        const type = buySellAtmarketPrice ? "Market" : "Limit";
+        const totalParams = `symbol=${newSymbol}&side=${isBuy ? 'BUY' : 'SELL'}&quantity=${isBuy ? buyAmount : sellAmount}&price=${isBuy ? buyPrice : sellPrice}&timestamp=${Date.now()}&type=${type}`;
         const json = {
             totalParams: totalParams
         }

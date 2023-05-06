@@ -15,9 +15,11 @@ router.post('/placeOrder',verifyToken, checkDatabaseConnection, async function (
         const quantity = urlParams.get('quantity');
         const price = urlParams.get('price');
         const timestamp = urlParams.get('timestamp');
+        const type = urlParams.get('type');
+        const status = "Filled";
         const userId = req.userId;
 
-        const newOrder = new Order({ timestamp, symbol, side, quantity, price, userId });
+        const newOrder = new Order({ timestamp, symbol,type, side, quantity, price,status, userId });
 
         await newOrder.save();
         res.status(201).json({
