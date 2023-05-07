@@ -71,4 +71,13 @@ We welcome contributions from the community! If you'd like to contribute to the 
 
 1. Open the application in your browser at `http://localhost:3000`.
 
+## Todo
+
+- [ ] Responsive design
+- [ ] Finish implementing trade orders: display the pnl in real time be able to close the order...  
+- [ ] Create a page that displays the results of all users: profit of the day, of the week...  
+- [ ] Give each user a virtual wallet with an initial sum and update this sum according to the trades made    
+- [ ] Improve frontend design  
+- [ ] 
+
 
