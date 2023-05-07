@@ -78,6 +78,14 @@ We welcome contributions from the community! If you'd like to contribute to the 
 - [ ] Create a page that displays the results of all users: profit of the day, of the week...  
 - [ ] Give each user a virtual wallet with an initial sum and update this sum according to the trades made    
 - [ ] Improve frontend design  
-- [ ] 
+
+
+### Some mongodb commands
+
+-Run mongodb on powerShell terminal  
+`& 'C:\Program Files\MongoDB\Server\6.0\bin\mongod.exe' --dbpath 'C:\data\db'`  
+
+-Stop mongodb  
+`net stop MongoDB`  
 
 
